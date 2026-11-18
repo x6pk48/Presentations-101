@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Presentation Planner</title>
+<style>
+:root{--bg:#fff;--p2:#faf9f8;--p3:#f3f2f1;--ln:#e1dfdd;--tx:#242424;--tx2:#616161;--br:#0f6cbd;--brd:#115ea3;--brb:#ebf3fc;--ok:#107c10;--okb:#e6f2e8;--rail:#e8ebfa;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1f1f;--p2:#292929;--p3:#333;--ln:#3d3d3d;--tx:#f5f5f5;--tx2:#adadad;--br:#479ef5;--brd:#62abf5;--brb:#0e2a45;--ok:#6ccb5f;--okb:#12301a;--rail:#2b2b3d}}
+:root[data-theme="dark"]{--bg:#1f1f1f;--p2:#292929;--p3:#333;--ln:#3d3d3d;--tx:#f5f5f5;--tx2:#adadad;--br:#479ef5;--brd:#62abf5;--brb:#0e2a45;--ok:#6ccb5f;--okb:#12301a;--rail:#2b2b3d}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);background:#0f6cbd}
+body{height:100%;font:14px/1.45 'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--tx)}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{height:100%;display:flex;flex-direction:column;background:var(--bg)}
+.top{background:#0f6cbd;color:#fff;display:flex;align-items:center;gap:14px;padding:6px 12px;height:48px;flex-shrink:0}
+.top b{font-weight:600;white-space:nowrap}
+.search{flex:1;max-width:520px;margin:0 auto}
+.search input{width:100%;border:0;border-radius:4px;padding:6px 12px;background:rgba(255,255,255,.9);color:#242424}
+.prog{font-size:12px;white-space:nowrap;background:rgba(255,255,255,.2);border-radius:12px;padding:2px 10px}
+.rib{display:flex;gap:4px;padding:6px 10px;border-bottom:1px solid var(--ln);background:var(--p2);overflow-x:auto;flex-shrink:0}
+.rib .tab{padding:4px 10px;font-weight:600;color:var(--br);border-bottom:2px solid var(--br);margin-right:8px}
+.rb{border:0;background:none;padding:5px 10px;border-radius:4px;cursor:pointer;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.rb:hover{background:var(--p3)}
+.rb.pri{background:var(--br);color:#fff}
+.rb.pri:hover{background:var(--brd)}
+.main{flex:1;display:grid;grid-template-columns:48px 230px 330px 1fr;min-height:0}
+.rail{background:var(--rail);display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:8px}
+.rail span{width:36px;height:36px;border-radius:6px;display:grid;place-items:center;color:var(--tx2)}
+.rail span.on{color:var(--br);background:var(--bg)}
+.rail svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6}
+.fold{background:var(--p2);border-right:1px solid var(--ln);overflow:auto;padding:10px 6px}
+.fold h4{font-size:12px;color:var(--tx2);padding:10px 10px 4px;font-weight:600}
+.fi{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:0;background:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:13px}
+.fi:hover{background:var(--p3)}
+.fi.on{background:var(--brb);font-weight:600}
+.fi .n{margin-left:auto;font-size:12px;color:var(--tx2)}
+.dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--tx2);flex-shrink:0;display:grid;place-items:center;font-size:9px;line-height:1}
+.dot.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.bar{height:6px;background:var(--p3);border-radius:6px;margin:8px 10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--br);width:0;transition:width .2s}
+.list{border-right:1px solid var(--ln);overflow:auto;background:var(--bg)}
+.lh{padding:12px 16px 8px;font-size:16px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline;position:sticky;top:0;background:var(--bg)}
+.lh small{font-weight:400;font-size:12px;color:var(--tx2)}
+.it{display:flex;gap:10px;padding:10px 14px;border-left:3px solid transparent;border-bottom:1px solid var(--ln);cursor:pointer}
+.it:hover{background:var(--p2)}
+.it.on{background:var(--brb);border-left-color:var(--br)}
+.av{width:34px;height:34px;border-radius:50%;background:var(--p3);color:var(--tx2);display:grid;place-items:center;font-weight:600;flex-shrink:0}
+.av.part{background:var(--br);color:#fff}
+.av.ok{background:var(--ok);color:#fff}
+.tx{min-width:0;flex:1}
+.tx b{display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.tx b span{font-size:11px;font-weight:400;color:var(--tx2)}
+.tx p{font-size:12.5px;color:var(--tx2);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tx p.e{font-style:italic;opacity:.8}
+.read{overflow:auto;padding:20px 28px 40px;min-width:0}
+.read h2{font-size:20px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{font-size:11px;border-radius:12px;padding:2px 10px;background:var(--p3);color:var(--tx2)}
+.chip.ok{background:var(--okb);color:var(--ok)}
+.guide{background:var(--p2);border-left:3px solid var(--br);border-radius:4px;padding:10px 14px;font-size:13px;color:var(--tx2);margin:8px 0 18px}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.fg label{font-weight:600;font-size:13px}
+.fg input,.fg textarea,.fg select{width:100%;padding:7px 10px;border:1px solid var(--ln);border-radius:4px;background:var(--bg)}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:2px solid var(--br);border-color:transparent}
+.fg textarea{min-height:76px;resize:vertical}
+.hd{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--br);margin:6px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--ln)}
+.nav{display:flex;gap:8px;margin-top:20px}
+.nav .rb{border:1px solid var(--ln)}
+dialog{border:1px solid var(--ln);border-radius:8px;padding:0;width:min(560px,94vw);background:var(--bg);color:var(--tx);margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+.dh{padding:14px 18px;font-weight:600;font-size:16px;border-bottom:1px solid var(--ln)}
+.db{padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.db textarea{min-height:170px;font:12.5px/1.5 ui-monospace,Consolas,monospace;padding:8px 10px;border:1px solid var(--ln);border-radius:4px;background:var(--bg);resize:vertical}
+.db select{padding:6px 8px;border:1px solid var(--ln);border-radius:4px;background:var(--bg)}
+.db .hint{font-size:12px;color:var(--tx2)}
+.df{padding:12px 18px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--ln)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#323232;color:#fff;padding:8px 16px;border-radius:4px;font-size:13px;opacity:0;pointer-events:none;transition:.2s}
+.toast.show{opacity:1}
+@media (max-width:980px){.main{grid-template-columns:1fr;grid-template-rows:auto 1fr}.rail,.fold{display:none}.list{max-height:200px;border-right:0;border-bottom:1px solid var(--ln)}.read{padding:16px}.search{display:none}.top{justify-content:space-between}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><b>Presentation Planner</b><div class="search"><input id="q" type="search" placeholder="Search slides and notes"></div><span class="prog" id="topProg">0/8 criteria</span></div>
+  <div class="rib">
+    <span class="tab">Home</span>
+    <button class="rb pri" id="bImp">＋ Import writer / work</button>
+    <button class="rb" id="bEx">Load template wording</button>
+    <button class="rb" id="bCopy">Copy outline</button>
+    <button class="rb" id="bClr">Clear all</button>
+  </div>
+  <div class="main">
+    <nav class="rail" aria-hidden="true">
+      <span class="on"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+    </nav>
+    <aside class="fold" id="fold"></aside>
+    <section class="list" id="list"></section>
+    <main class="read" id="read"></main>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <div class="dh">Import a writer and their work</div>
+  <div class="db">
+    <label>Import into
+      <select id="tgt"><option value="1">Reading 1 (one writer)</option><option value="2">Reading 2 (one writer)</option><option value="0">Whole project (use “R1 …” and “R2 …” prefixes, or JSON)</option></select>
+    </label>
+    <textarea id="txt" placeholder="Author: Jane Doe
+Title: Example Article (2024)
+Affiliation: University of Somewhere
+Discipline: Sociology
+Philosophy: Critical, rights-focused
+Thesis: One to three sentences…
+Method: Qualitative case study
+Evidence: Interviews, policy documents
+Strengths: …
+Limitations: …"></textarea>
+    <input type="file" id="file" accept=".txt,.md,.json">
+    <div class="hint">One “Label: value” per line. Also understood: Writer, Institution, Field, Beliefs, Argument, Data, Pros, Cons. Only the fields you supply are changed.</div>
+  </div>
+  <div class="df"><button class="rb" id="dCancel">Cancel</button><button class="rb pri" id="dOk">Import</button></div>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+var KEY='ppt_planner_outlook_v2',D={},view='all',qs='',cur=0,clr=0;
+try{D=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){D={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function rf(n){var p='r'+n;return[[0,'Reading '+n,'h'],[p+'a','Author(s) / writer','i','e.g. Surname and Surname'],[p+'t','Title and year','i','e.g. Title of the reading (Year)'],[p+'af','Affiliation','i','Institution, organisation or employer'],[p+'d','Discipline','i','e.g. law, economics, sociology'],[p+'p','Underlying philosophy or beliefs','t','Who are they writing for, and what does that make them emphasise?']]}
+var S=[
+{t:'Title & framing',g:'State the two readings, their contexts and the central contrast in one sentence. Preview that they may answer different questions rather than disagree. End with a roadmap.',f:[['topic','Presentation topic','i','e.g. [Topic]: [Context 1] versus [Context 2]'],['contrast','Central contrast (one sentence)','t',''],['roadmap','Roadmap','t','What will the audience see, in order?']]},
+{t:'Authors & positionality',g:'For each author give affiliation, discipline and underlying philosophy. Ask: who are they writing for, and what does that predispose them to emphasise?',f:rf(1).filter(function(x){return x[0]!=='r1t'}).concat(rf(2).filter(function(x){return x[0]!=='r2t'}))},
+{t:'Reading 1: thesis',g:'Core argument in 2–3 sentences: claim, problem, conclusion. No evidence yet, just the argument.',f:[['r1t','Reading 1 title and year','i',''],['r1th','Thesis / core argument','t','']]},
+{t:'Reading 2: thesis',g:'Same treatment. Place the two theses side by side to reveal convergence and divergence.',f:[['r2t','Reading 2 title and year','i',''],['r2th','Thesis / core argument','t','']]},
+{t:'Methods compared',g:'Identify each method (qualitative, quantitative or mixed, plus the specific type) and name the evidence each author relies on. Different evidence types mean the articles may not directly refute each other.',f:[[0,'Reading 1','h'],['r1m','Method','i','e.g. qualitative, legal-policy analysis'],['r1e','Evidence used','t',''],[0,'Reading 2','h'],['r2m','Method','i',''],['r2e','Evidence used','t','']]},
+{t:'Pros & cons of the methods',g:'For each method: what it captures well and what it misses. Finish with a synthesis point on how methodological differences explain different conclusions.',f:[[0,'Reading 1','h'],['r1pro','What the method captures well','t',''],['r1con','What it misses','t',''],[0,'Reading 2','h'],['r2pro','What the method captures well','t',''],['r2con','What it misses','t',''],[0,'Synthesis','h'],['msynth','How the methods explain the different conclusions','t','']]},
+{t:'Wider reading & context',g:'Bring in 2–3 external sources or concepts that reframe the two readings: a key concept, benchmark, or legal or policy framework.',f:[['w1','External sources / concepts (2–3)','t',''],['w2','How they reframe the two readings','t','']]},
+{t:'Interactive activity',g:'Role-play, debate or scenario that forces the audience to apply both readings from opposing perspectives. Each side uses one reading’s evidence. Announce who does what.',f:[['act','Activity format and timing','t',''],['actq','Opening question / prompt','t',''],['div','Division of labour (member strengths)','t','Speaker A: … Speaker B: …']]},
+{t:'Synthesis & takeaway',g:'Resolve the comparison: contradictory, complementary or sequential? State the deeper fault line and one memorable sentence.',f:[['rel','The readings are…','s','',['','Contradictory','Complementary','Sequential']],['fault','Deeper fault line','t',''],['take','One memorable sentence','t','']]}
+];
+var CR=[
+{t:'Understood the readings’ core argument',c:'R',k:['r1th','r2th','take']},
+{t:'Led the class effectively',c:'R',k:['contrast','act']},
+{t:'Used each member’s strengths',c:'R',k:['div']},
+{t:'Author affiliation and positionality',c:'S',k:['r1af','r2af']},
+{t:'Disciplinary background of authors',c:'S',k:['r1d','r2d']},
+{t:'Authors’ beliefs or philosophy',c:'S',k:['r1p','r2p']},
+{t:'Additional research / wider reading',c:'R',k:['w1','w2']},
+{t:'Pros and cons of the two methods',c:'R',k:['r1pro','r1con','r2pro','r2con']}
+];
+S.forEach(function(s){s.keys=s.f.filter(function(x){return x[2]!=='h'}).map(function(x){return x[0]});s.cr=[];CR.forEach(function(c,i){if(c.k.some(function(k){return s.keys.indexOf(k)>-1}))s.cr.push(i)})});
+function has(k){var v=String(D[k]||'').trim();return v.length>0&&!/\[[A-Za-z][^\]]*\]/.test(v)}
+function sp(s){var n=s.keys.filter(has).length;return n===0?0:n===s.keys.length?2:1}
+function cd(c){return c.k.every(has)}
+function match(s){
+ if(qs){var h=(s.t+' '+s.g+' '+s.keys.map(function(k){return D[k]||''}).join(' ')).toLowerCase();if(h.indexOf(qs)<0)return false}
+ if(view==='todo')return sp(s)!==2;if(view==='done')return sp(s)===2;
+ if(typeof view==='number')return s.cr.indexOf(view)>-1;return true}
+function fold(){
+ var done=S.filter(function(s){return sp(s)===2}).length,cn=CR.filter(cd).length;
+ var h='<h4>Slides</h4>'+[['all','All slides',S.length],['todo','To do',S.length-done],['done','Complete',done]].map(function(x){return'<button class="fi'+(view===x[0]?' on':'')+'" data-v="'+x[0]+'">'+x[1]+'<span class="n">'+x[2]+'</span></button>'}).join('')+'<h4>Marking criteria</h4>'+CR.map(function(c,i){var d=cd(c);return'<button class="fi'+(view===i?' on':'')+'" data-v="'+i+'"><span class="dot'+(d?' ok':'')+'">'+(d?'✓':'')+'</span><span>'+c.t+'</span></button>'}).join('')+'<div class="bar"><i style="width:'+cn/CR.length*100+'%"></i></div><div style="font-size:12px;color:var(--tx2);padding:0 10px">'+cn+' of '+CR.length+' criteria met</div>';
+ $('#fold').innerHTML=h;$('#topProg').textContent=cn+'/'+CR.length+' criteria'}
+function list(){
+ var rows=S.map(function(s,i){return{s:s,i:i}}).filter(function(r){return match(r.s)});
+ $('#list').innerHTML='<div class="lh">Slides<small>'+rows.length+' of '+S.length+'</small></div>'+(rows.map(function(r){
+  var p=sp(r.s),pv=''; for(var j=0;j<r.s.keys.length;j++){if(has(r.s.keys[j])){pv=D[r.s.keys[j]];break}}
+  return'<div class="it'+(r.i===cur?' on':'')+'" data-i="'+r.i+'"><div class="av'+(p===2?' ok':p===1?' part':'')+'">'+(p===2?'✓':r.i+1)+'</div><div class="tx"><b>'+esc(r.s.t)+'<span>'+(p===2?'Done':p===1?'In progress':'To do')+'</span></b><p'+(pv?'':' class="e"')+'>'+esc(pv||r.s.g)+'</p></div></div>'}).join('')||'<div style="padding:20px;color:var(--tx2)">No slides match.</div>')}
+function chips(s){return s.cr.map(function(i){var d=cd(CR[i]);return'<span class="chip'+(d?' ok':'')+'">'+(d?'✓ ':'')+CR[i].c+': '+CR[i].t+'</span>'}).join('')}
+function read(){
+ var s=S[cur];
+ var h='<div style="font-size:12px;color:var(--tx2)">Slide '+(cur+1)+' of '+S.length+'</div><h2>'+esc(s.t)+'</h2><div class="chips" id="chips">'+chips(s)+'</div><div class="guide">'+esc(s.g)+'</div>';
+ s.f.forEach(function(f){
+  if(f[2]==='h'){h+='<div class="hd">'+esc(f[1])+'</div>';return}
+  var v=D[f[0]]||'',id='f_'+f[0];
+  h+='<div class="fg"><label for="'+id+'">'+esc(f[1])+'</label>';
+  if(f[2]==='i')h+='<input id="'+id+'" data-k="'+f[0]+'" value="'+esc(v)+'" placeholder="'+esc(f[3])+'">';
+  else if(f[2]==='t')h+='<textarea id="'+id+'" data-k="'+f[0]+'" placeholder="'+esc(f[3])+'">'+esc(v)+'</textarea>';
+  else h+='<select id="'+id+'" data-k="'+f[0]+'">'+f[4].map(function(o){return'<option'+(o===v?' selected':'')+' value="'+o+'">'+(o||'Choose…')+'</option>'}).join('')+'</select>';
+  h+='</div>'});
+ h+='<div class="nav"><button class="rb" data-n="-1"'+(cur===0?' disabled':'')+'>← Previous</button><button class="rb pri" data-n="1"'+(cur===S.length-1?' disabled':'')+'>Next slide →</button></div>';
+ $('#read').innerHTML=h;$('#read').scrollTop=0}
+function all(){fold();list();read()}
+function toast(m){var t=$('#toast');t.textContent=m;t.className='toast show';setTimeout(function(){t.className='toast'},1800)}
+$('#q').addEventListener('input',function(e){qs=e.target.value.trim().toLowerCase();list()});
+$('#fold').addEventListener('click',function(e){var b=e.target.closest('[data-v]');if(!b)return;var v=b.dataset.v;view=isNaN(v)?v:+v;fold();list()});
+$('#list').addEventListener('click',function(e){var b=e.target.closest('[data-i]');if(!b)return;cur=+b.dataset.i;list();read()});
+$('#read').addEventListener('input',function(e){var k=e.target.dataset.k;if(!k)return;D[k]=e.target.value;save();fold();list();$('#chips').innerHTML=chips(S[cur])});
+$('#read').addEventListener('click',function(e){var b=e.target.closest('[data-n]');if(!b)return;cur=Math.max(0,Math.min(S.length-1,cur+ +b.dataset.n));list();read()});
+/* import */
+var AL={a:['author','authors','writer','by'],t:['title','article','work','reading'],af:['affiliation','institution','organisation','organization'],d:['discipline','field','background'],p:['philosophy','beliefs','stance','positionality'],th:['thesis','argument','claim','core argument'],m:['method','methods','methodology'],e:['evidence','data','sources'],pro:['strengths','pros','captures well'],con:['limitations','cons','weaknesses','misses']};
+var GL={topic:['topic'],contrast:['contrast','framing'],roadmap:['roadmap'],w1:['wider reading','sources','external sources'],w2:['reframe','context'],act:['activity'],actq:['prompt','opening question'],div:['division','division of labour'],msynth:['methods synthesis'],rel:['relation'],fault:['fault line'],take:['takeaway','synthesis','one sentence']};
+function find(map,k){for(var key in map){if(map[key].indexOf(k)>-1)return key}return null}
+function parse(txt,tg){
+ var out={};txt=txt.trim();
+ if(txt[0]==='{'){try{var j=JSON.parse(txt);for(var k in j){if(typeof j[k]==='string')out[k]=j[k]}return out}catch(e){}}
+ var last=null;
+ txt.split(/\r?\n/).forEach(function(line){
+  var m=line.match(/^\s*([^:]{1,40}):\s*(.*)$/),key=null;
+  if(m){var lab=m[1].trim().toLowerCase(),n=tg;var pm=lab.match(/^(?:r|reading\s?)([12])\s+(.*)$/);if(pm){n=pm[1];lab=pm[2]}
+   key=n&&n!=='0'?(find(AL,lab)?'r'+n+find(AL,lab):null):(pm?(find(AL,lab)?'r'+n+find(AL,lab):null):find(GL,lab));
+   if(key){out[key]=m[2];last=key;return}}
+  if(last&&line.trim())out[last]+=' '+line.trim()});
+ return out}
+$('#bImp').onclick=function(){try{$('#dlg').showModal()}catch(e){$('#dlg').setAttribute('open','')}};
+$('#dCancel').onclick=function(){$('#dlg').close()};
+$('#file').onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){$('#txt').value=r.result};r.readAsText(f)};
+$('#dOk').onclick=function(){var o=parse($('#txt').value,$('#tgt').value),n=0;for(var k in o){if(String(o[k]).trim()){D[k]=o[k];n++}}save();$('#dlg').close();$('#txt').value='';all();toast(n?'Imported '+n+' fields':'Nothing recognised. Check the “Label: value” format.')};
+/* example, copy, clear */
+var EXT={topic:'[Topic]: [Reading 1 context] and [Reading 2 context]',contrast:'Both readings address [shared issue], but [Author 1] asks “[question 1]” while [Author 2] asks “[question 2]”.',roadmap:'We will cover [authors], [theses], [methods], [wider reading], [activity] and [synthesis].',msynth:'Because [Reading 1] relies on [evidence] and [Reading 2] on [evidence], they reach different conclusions about [issue].',w1:'[Source or concept 1]; [source or concept 2]; [source or concept 3].',w2:'This reframes the readings by showing [point].',act:'[Role-play / debate / scenario]: [Group A] argue from Reading 1 and [Group B] from Reading 2 for [number] minutes, then swap.',actq:'[A question that forces the audience to pick a side?]',div:'Speaker A: [tasks and strength]. Speaker B: [tasks and strength]. Speaker C: [tasks and strength].',fault:'The deeper disagreement is about [fault line].',take:'[Reading 1] tells us [point]; [Reading 2] tells us [point]; together [conclusion].',r1a:'[Author surname(s)]',r1t:'[Title] ([Year])',r1af:'[Institution, organisation or employer]',r1d:'[Discipline]',r1p:'Writing for [audience], so likely to emphasise [priorities].',r1th:'[Author] argues that [claim]. The problem is [problem], and the conclusion is [conclusion].',r1m:'[Qualitative / quantitative / mixed]: [specific method]',r1e:'[Type of evidence], for example [one concrete example].',r1pro:'Captures [strength] well, which helps with [purpose].',r1con:'Misses [limitation], so cannot show [what].',r2a:'[Author surname(s)]',r2t:'[Title] ([Year])',r2af:'[Institution, organisation or employer]',r2d:'[Discipline]',r2p:'Writing for [audience], so likely to emphasise [priorities].',r2th:'[Author] argues that [claim]. The problem is [problem], and the conclusion is [conclusion].',r2m:'[Qualitative / quantitative / mixed]: [specific method]',r2e:'[Type of evidence], for example [one concrete example].',r2pro:'Captures [strength] well, which helps with [purpose].',r2con:'Misses [limitation], so cannot show [what].'};
+$('#bEx').onclick=function(){D=JSON.parse(JSON.stringify(EXT));save();cur=0;view='all';all();toast('Template loaded. Replace the [bracketed] parts.')};
+$('#bClr').onclick=function(){var b=$('#bClr');if(!clr){clr=1;b.textContent='Click again to confirm';setTimeout(function(){clr=0;b.textContent='Clear all'},2500);return}clr=0;b.textContent='Clear all';D={};save();all();toast('Cleared')};
+$('#bCopy').onclick=function(){
+ var t=S.map(function(s,i){return'Slide '+(i+1)+': '+s.t+'\n'+s.f.filter(function(f){return f[2]!=='h'&&has(f[0])}).map(function(f){return'- '+f[1]+': '+D[f[0]]}).join('\n')}).join('\n\n');
+ function fb(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy')}catch(e){}a.remove();toast(ok?'Outline copied':'Copy not available here')}
+ try{navigator.clipboard.writeText(t).then(function(){toast('Outline copied')},fb)}catch(e){fb()}};
+if(!Object.keys(D).length){D=JSON.parse(JSON.stringify(EXT))}
+all();
+})();
+</script>
+</body>
+</html>
